@@ -156,16 +156,15 @@ for train_index, test_index in sss:
     y_train, y_test = all_labels[train_index], all_labels[test_index]
 ys = set(all_labels)
 
-'''We need to call test_simple function in test.py for each model.'''
-
+'''We need to make a model for each word.'''
 
 ms = [Predict() for y in ys]
 _ = [model.trainModel(X_train[y_train == y, :, :]) for model, y in zip(ms, ys)]
 ps = [model.testModel(X_test) for model in ms]
 res = np.vstack(ps)
 predicted_label = np.argmax(res, axis=0)
-#dictionary = ['apple', 'banana', 'elephant', 'dog', 'frog', 'cat', 'jack', 'gorgeous', 'Intelligent', 'hello']
-dictionary = ['nine', 'seven', 'six', 'two', 'eight', 'five', 'three', 'zero', 'four', 'one']
+#dictionary = ['nine', 'seven', 'six', 'two', 'eight', 'five', 'three', 'zero', 'four', 'one']
+dictionary = ['kiwi', 'apple', 'peach', 'pineapple', 'orange', 'banana', 'lime']
 spoken_word = []
 for i in predicted_label:
     spoken_word.append(dictionary[i])
