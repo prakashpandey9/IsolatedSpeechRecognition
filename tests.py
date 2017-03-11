@@ -91,7 +91,7 @@ from hmm.continuous.GMHMM import GMHMM
 import numpy
 
 class Predict(GMHMM):
-    def __init__(self):
+    def __init__(self,n,m,d=1,A=None,means=None,covars=None,w=None,pi=None,min_std=0.01,init_type='uniform',precision=numpy.double,verbose=False):
         GMHMM.__init__(self,n,m,d,A,means,covars,w,pi,min_std,init_type,precision,verbose)
 
     def trainModel(self, obs):
