@@ -30,13 +30,13 @@ for n, l in enumerate(set(labels)):
 print('Labels and label indices', all_labels)
 print data.shape
 
-#import python_speech_features as speech
-#all_obs = np.zeros([500, 13, 43])
-#for n,file in enumerate(file_paths):
-#    all_obs[n,]=speech.mfcc(data[n,:]).T
-#print all_obs.shape
+import python_speech_features as speech
+all_obs = np.zeros([500, 13, 43])
+for n,file in enumerate(file_paths):
+    all_obs[n,]=speech.mfcc(data[n,:]).T
+print all_obs.shape
 
-import scipy
+'''import scipy
 
 def stft(x, fftsize=64, overlap_pct=.5):
     hop = int(fftsize * (1 - overlap_pct))
@@ -81,7 +81,7 @@ for i in range(data.shape[0]):
     all_obs.append(obs)
     
 all_obs = np.atleast_3d(all_obs)
-print all_obs.shape
+print all_obs.shape '''
 
 
 import scipy.stats as st
@@ -93,7 +93,7 @@ import numpy
 def test_simple(obs):
     n = 5
     m = 5
-    d = 218
+    d = 43
     pi = numpy.array([0.5, 0.5, 0.5, 0.5, 0.5])
     A = numpy.ones((n,n),dtype=numpy.double)/float(n)
     
