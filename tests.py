@@ -95,15 +95,12 @@ class Predict(GMHMM):
         GMHMM.__init__(self,n,m,d,A,means,covars,w,pi,min_std,init_type,precision,verbose)
 
     def trainModel(self, obs):
-        n = 5
-        m = 5
-        d = 43
         pi = numpy.array([0.5, 0.5, 0.5, 0.5, 0.5])
-        A = numpy.ones((n,n),dtype=numpy.double)/float(n)
+        A = numpy.ones((self.n,self.n),dtype=numpy.double)/float(self.n)
 
-        w = numpy.ones((n,m),dtype=numpy.double)
-        means = numpy.ones((n,m,d),dtype=numpy.double)
-        covars = [[ numpy.matrix(numpy.eye(d,d)) for j in xrange(m)] for i in xrange(n)]
+        w = numpy.ones((self.n,self.m),dtype=numpy.double)
+        means = numpy.ones((self.n,self.m,self.d),dtype=numpy.double)
+        covars = [[ numpy.matrix(numpy.eye(self.d,self.d)) for j in xrange(self.m)] for i in xrange(self.n)]
         n_iter = 20
         '''w[0][0] = 0.5
         w[0][1] = 0.5
@@ -118,7 +115,7 @@ class Predict(GMHMM):
         means[1][1][0] = 0.5    
         means[1][1][1] = 0.5 '''
 
-        gmmhmm = GMHMM(n,m,d,A,means,covars,w,pi,init_type='user',verbose=True)
+        gmmhmm = GMHMM(self.n,self.m,self.d,A,means,covars,w,pi,init_type='user',verbose=True)
 
         print "Doing Baum-welch"
         #gmmhmm.train(obs,10)
@@ -158,7 +155,7 @@ ys = set(all_labels)
 
 '''We need to make a model for each word.'''
 
-ms = [Predict() for y in ys]
+ms = [Predict(5, 5, 43) for y in ys]
 _ = [model.trainModel(X_train[y_train == y, :, :]) for model, y in zip(ms, ys)]
 ps = [model.testModel(X_test) for model in ms]
 res = np.vstack(ps)
