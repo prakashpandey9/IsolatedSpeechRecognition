@@ -90,70 +90,59 @@ from hmm.continuous.GMHMM import GMHMM
 #from hmm.discrete.DiscreteHMM import DiscreteHMM
 import numpy
 
-def test_simple(obs):
-    n = 5
-    m = 5
-    d = 43
-    pi = numpy.array([0.5, 0.5, 0.5, 0.5, 0.5])
-    A = numpy.ones((n,n),dtype=numpy.double)/float(n)
-    
-    w = numpy.ones((n,m),dtype=numpy.double)
-    means = numpy.ones((n,m,d),dtype=numpy.double)
-    covars = [[ numpy.matrix(numpy.eye(d,d)) for j in xrange(m)] for i in xrange(n)]
-    n_iter = 20
-    '''w[0][0] = 0.5
-    w[0][1] = 0.5
-    w[1][0] = 0.5
-    w[1][1] = 0.5    
-    means[0][0][0] = 0.5
-    means[0][0][1] = 0.5
-    means[0][1][0] = 0.5    
-    means[0][1][1] = 0.5
-    means[1][0][0] = 0.5
-    means[1][0][1] = 0.5
-    means[1][1][0] = 0.5    
-    means[1][1][1] = 0.5 '''
+class Predict(GMHMM):
+    def __init__(self):
+        GMHMM.__init__(self,n,m,d,A,means,covars,w,pi,min_std,init_type,precision,verbose)
 
-    gmmhmm = GMHMM(n,m,d,A,means,covars,w,pi,init_type='user',verbose=True)
-    
-    print "Doing Baum-welch"
-    #gmmhmm.train(obs,10)
-    if len(obs.shape) == 2:
-        for i in range(n_iter):
-            gmmhmm.train(obs)
-            print
-            print "Pi",gmmhmm.pi
-            print "A",gmmhmm.A
-            print "weights", gmmhmm.w
-            print "means", gmmhmm.means
-            print "covars", gmmhmm.covars
-            
-    elif len(obs.shape) == 3:
-        count = obs.shape[0]
-        for n in range(count):
-            for i in range(n_iter):
-                gmmhmm.train(obs[n, :, :])
-                print
-                print "Pi",gmmhmm.pi
-                print "A",gmmhmm.A
-                print "weights", gmmhmm.w
-                print "means", gmmhmm.means
-                print "covars", gmmhmm.covars
+    def trainModel(self, obs):
+        n = 5
+        m = 5
+        d = 43
+        pi = numpy.array([0.5, 0.5, 0.5, 0.5, 0.5])
+        A = numpy.ones((n,n),dtype=numpy.double)/float(n)
 
+        w = numpy.ones((n,m),dtype=numpy.double)
+        means = numpy.ones((n,m,d),dtype=numpy.double)
+        covars = [[ numpy.matrix(numpy.eye(d,d)) for j in xrange(m)] for i in xrange(n)]
+        n_iter = 20
+        '''w[0][0] = 0.5
+        w[0][1] = 0.5
+        w[1][0] = 0.5
+        w[1][1] = 0.5    
+        means[0][0][0] = 0.5
+        means[0][0][1] = 0.5
+        means[0][1][0] = 0.5    
+        means[0][1][1] = 0.5
+        means[1][0][0] = 0.5
+        means[1][0][1] = 0.5
+        means[1][1][0] = 0.5    
+        means[1][1][1] = 0.5 '''
 
-def test(self, obs):
-    if len(obs.shape) == 2:
-        self._mapB(obs)
-        log_likelihood, _ = self.forwardbackward(obs, cache=True)
-        return log_likelihood
-    elif len(obs.shape) == 3:
-        count = obs.shape[0]
-        out = np.zeros((count,))
-        for n in range(count):
-            self._mapB(obs[n, :, :])
-            log_likelihood, _ = self.forwardbackward(obs[n, :, :], cache=True)
-            out[n] = log_likelihood
-        return out
+        gmmhmm = GMHMM(n,m,d,A,means,covars,w,pi,init_type='user',verbose=True)
+
+        print "Doing Baum-welch"
+        #gmmhmm.train(obs,10)
+        if len(obs.shape) == 2:
+            gmmhmm.train(self, obs)
+            return self
+
+        elif len(obs.shape) == 3:
+            count = obs.shape[0]
+            for n in range(count):
+                gmmhmm.train(self, obs[n, :, :])
+                return self
+
+    def test(self, obs):
+        if len(obs.shape) == 2:
+            log_likelihood, _ = gmmhmm.forwardbackward(self, obs)
+            return log_likelihood
+        elif len(obs.shape) == 3:
+            count = obs.shape[0]
+            out = np.zeros((count,))
+            for n in range(count):
+                log_likelihood, _ = gmmhmm.forwardbackward(self, obs[n, :, :])
+                out[n] = log_likelihood
+            return out
 
 from sklearn.cross_validation import StratifiedShuffleSplit
 sss = StratifiedShuffleSplit(all_labels, test_size=0.1, random_state=0)
@@ -170,11 +159,10 @@ ys = set(all_labels)
 '''We need to call test_simple function in test.py for each model.'''
 
 
-ms = [test_simple(X_train[y_train == y, :, :]) for y in ys]
-
-#_ = [model.train(X_train[y_train == y, :, :]) for model, y in zip(ms, ys)]
-ps = [test(X_test) for model in ms]
-res = np.vstack(ps1)
+ms = [Predict() for y in ys]
+_ = [model.trainModel(X_train[y_train == y, :, :]) for model, y in zip(ms, ys)]
+ps = [model.testModel(X_test) for model in ms]
+res = np.vstack(ps)
 predicted_label = np.argmax(res, axis=0)
 #dictionary = ['apple', 'banana', 'elephant', 'dog', 'frog', 'cat', 'jack', 'gorgeous', 'Intelligent', 'hello']
 dictionary = ['nine', 'seven', 'six', 'two', 'eight', 'five', 'three', 'zero', 'four', 'one']
