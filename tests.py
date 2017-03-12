@@ -120,24 +120,24 @@ class Predict(GMHMM):
         print "Doing Baum-welch"
         #gmmhmm.train(obs,10)
         if len(obs.shape) == 2:
-            gmmhmm.train(self, obs)
+            gmmhmm.train(obs)
             return self
 
         elif len(obs.shape) == 3:
             count = obs.shape[0]
             for n in range(count):
-                gmmhmm.train(self, obs[n, :, :])
+                gmmhmm.train(obs[n, :, :])
                 return self
 
     def test(self, obs):
         if len(obs.shape) == 2:
-            log_likelihood, _ = gmmhmm.forwardbackward(self, obs)
+            log_likelihood, _ = self.forwardbackward(obs)
             return log_likelihood
         elif len(obs.shape) == 3:
             count = obs.shape[0]
             out = np.zeros((count,))
             for n in range(count):
-                log_likelihood, _ = gmmhmm.forwardbackward(self, obs[n, :, :])
+                log_likelihood, _ = self.forwardbackward(obs[n, :, :])
                 out[n] = log_likelihood
             return out
 
