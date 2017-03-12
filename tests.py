@@ -95,7 +95,7 @@ class Predict(GMHMM):
         GMHMM.__init__(self,n,m,d,A,means,covars,w,pi,min_std,init_type,precision,verbose)
 
     def trainModel(self, obs):
-        pi = numpy.array([0.5, 0.5, 0.5, 0.5, 0.5])
+        pi = numpy.array([0.2, 0.2, 0.2, 0.2, 0.2])
         A = numpy.ones((self.n,self.n),dtype=numpy.double)/float(self.n)
 
         w = numpy.ones((self.n,self.m),dtype=numpy.double)
