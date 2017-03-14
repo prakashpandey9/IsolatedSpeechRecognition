@@ -129,7 +129,7 @@ class Predict(GMHMM):
                 gmmhmm.train(obs[n, :, :])
                 return self
 
-    def test(self, obs):
+    def testModel(self, obs):
         if len(obs.shape) == 2:
             log_likelihood, _ = self.forwardbackward(obs)
             return log_likelihood
