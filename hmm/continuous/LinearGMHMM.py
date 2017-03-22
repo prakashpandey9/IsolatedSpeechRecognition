@@ -1,8 +1,3 @@
-'''
-Created on Nov 14, 2012
-@author: GuyZ
-'''
-
 from GMHMM import GMHMM
 from hmm.weights.Linear import Linear
 import numpy
