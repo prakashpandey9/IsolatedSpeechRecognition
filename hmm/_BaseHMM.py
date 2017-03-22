@@ -1,11 +1,3 @@
-'''
-Created on Oct 31, 2012
-@author: GuyZ
-This code is based on:
- - QSTK's HMM implementation - http://wiki.quantsoftware.org/
- - A Tutorial on Hidden Markov Models and Selected Applications in Speech Recognition, LR RABINER 1989 
-'''
-
 import numpy
 
 class _BaseHMM(object):
