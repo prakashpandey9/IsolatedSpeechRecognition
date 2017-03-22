@@ -1,8 +1,3 @@
-'''
-Created on Nov 12, 2012
-@author: GuyZ
-'''
-
 from hmm._BaseHMM import _BaseHMM
 import numpy
 
