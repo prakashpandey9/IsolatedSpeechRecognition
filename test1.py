@@ -1,8 +1,3 @@
-'''
-Created on Nov 13, 2012
-@author: GuyZ
-'''
-
 from hmm.continuous.GMHMM import GMHMM
 from hmm.discrete.DiscreteHMM import DiscreteHMM
 import numpy
